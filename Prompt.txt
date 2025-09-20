@@ -1,0 +1,18 @@
+You are an AI coding assistant. Create a small project called `nutrition-label-scanner` that implements an MVP (Phase 1 & 2) using Streamlit (UI), pytesseract (OCR), and the Hugging Face Inference API model `facebook/bart-large-cnn` for summarization. The app must accept an uploaded image (mobile-friendly), run OCR, display extracted text, send that text to Hugging Face inference API for summarization, and display the summary.
+
+Generate these files with exact contents:
+
+1) app.py
+2) requirements.txt
+3) README.md
+4) .gitignore (simple)
+
+**Important behavior & constraints**
+- The app must read the Hugging Face API token from env var `HUGGINGFACE_API_TOKEN`. (Explain in README how to get and set it.)
+- Use `pytesseract` for OCR. Clearly document that the Tesseract binary must be installed on the machine and show platform commands in README.
+- Implement basic image preprocessing (grayscale, autocontrast, sharpen, optional resize) before OCR to improve accuracy.
+- Use the Hugging Face Inference API endpoint `https://api-inference.huggingface.co/models/facebook/bart-large-cnn`. Use `requests.post` and handle errors and model cold starts (use options.wait_for_model).
+- For long or empty OCR results, show a helpful message.
+- Use Streamlit spinners and a clean layout: show the uploaded image, OCR result in a scrollable box, then the AI summary below.
+- Cache expensive ops where appropriate (use Streamlit caching).
+- Include basic error handling for network errors and tesseract missing/bad path.
