@@ -1,20 +1,21 @@
-# Nutrition Label Scanner
+# NutriScan - AI Nutrition Label Analyzer
 
-A Streamlit web application that uses OCR to extract text from nutrition labels and provides an AI-generated summary using the Hugging Face BART model.
+A modern web application that uses OCR and AI to analyze nutrition labels and provide easy-to-understand summaries.
 
 ## Features
 
-- Mobile-friendly image upload
-- Image preprocessing for better OCR accuracy
-- Text extraction using Tesseract OCR
-- AI-powered summarization using facebook/bart-large-cnn
-- Clean, user-friendly interface
+- 📸 Mobile-friendly image upload
+- 🔍 Advanced image preprocessing for better OCR accuracy
+- 📝 Text extraction using Tesseract OCR
+- 🤖 AI-powered summarization using Mistral AI
+- 💅 Clean, modern user interface
+- 🚀 Instant health insights
 
 ## Prerequisites
 
 1. Python 3.8+
-2. Tesseract OCR binary
-3. Hugging Face API token
+2. Tesseract OCR
+3. Mistral AI API key
 
 ### Installing Tesseract OCR
 
@@ -34,27 +35,47 @@ sudo apt-get update
 sudo apt-get install tesseract-ocr
 ```
 
-### Getting a Hugging Face API Token
+### Setting Up Mistral AI API Key
 
-1. Create an account at [Hugging Face](https://huggingface.co)
-2. Go to your profile settings
-3. Navigate to "Access Tokens"
-4. Create a new token with read access
-5. Copy the token
+1. Create an account at [Mistral AI](https://console.mistral.ai/)
+2. Generate an API key from your dashboard
+3. Set the API key as an environment variable:
+
+**Windows (PowerShell)**
+```powershell
+$env:MISTRAL_API_KEY="your_api_key_here"
+```
+
+**Windows (Command Prompt)**
+```cmd
+set MISTRAL_API_KEY=your_api_key_here
+```
+
+**macOS/Linux**
+```bash
+export MISTRAL_API_KEY=your_api_key_here
+```
+
+For persistent storage, add the API key to your environment variables or create a `.env` file in the project root:
+```env
+MISTRAL_API_KEY=your_api_key_here
+```
 
 ## Setup
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/nutrition-label-scanner.git
-cd nutrition-label-scanner
+git clone https://github.com/yourusername/nutriscan.git
+cd nutriscan
 ```
 
 2. Create and activate a virtual environment:
 ```bash
 python -m venv venv
+
 # Windows
 venv\Scripts\activate
+
 # macOS/Linux
 source venv/bin/activate
 ```
@@ -64,10 +85,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-4. Create a `.env` file in the project root and add your Hugging Face API token:
-```
-HUGGINGFACE_API_TOKEN=your_token_here
-```
+4. Set up your environment variables as described above
 
 ## Running the Application
 
@@ -76,14 +94,13 @@ HUGGINGFACE_API_TOKEN=your_token_here
 streamlit run app.py
 ```
 
-2. Open your browser and navigate to the URL shown in the terminal (typically http://localhost:8501)
+2. Open your browser and navigate to http://localhost:8501
 
 ## Usage
 
-1. Upload an image of a nutrition label using the file uploader
-2. The app will preprocess the image and extract text using OCR
-3. The extracted text will be displayed in a scrollable box
-4. An AI-generated summary will appear below the extracted text
+1. Upload a nutrition label photo
+2. Click "Analyze" to process the image
+3. View the AI-generated summary and health insights
 
 ## Troubleshooting
 
@@ -91,18 +108,18 @@ streamlit run app.py
 
 1. **Tesseract not found error**
    - Verify Tesseract is installed
-   - Check if the Tesseract path is correctly set in your system's PATH variable
-   - On Windows, you may need to set the path explicitly in the code
+   - Check if the Tesseract path is in your system's PATH
+   - On Windows, you might need to set the path explicitly
 
-2. **Poor OCR Results**
-   - Ensure the image is clear and well-lit
-   - Try adjusting the image preprocessing parameters
-   - Make sure the text in the image is properly oriented
+2. **API Key Error**
+   - Ensure MISTRAL_API_KEY is set in your environment variables
+   - Check that the API key is valid
+   - Verify your internet connection
 
-3. **API Errors**
-   - Verify your Hugging Face API token is correct
-   - Check your internet connection
-   - The model might be loading if it's the first request (cold start)
+3. **Poor OCR Results**
+   - Use a clear, well-lit photo
+   - Ensure the label is properly oriented
+   - Try to avoid glare or shadows
 
 ## License
 

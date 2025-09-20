@@ -1,4 +1,4 @@
-You are an AI coding assistant. Create a small project called `nutrition-label-scanner` that implements an MVP (Phase 1 & 2) using Streamlit (UI), pytesseract (OCR), and the Hugging Face Inference API model `facebook/bart-large-cnn` for summarization. The app must accept an uploaded image (mobile-friendly), run OCR, display extracted text, send that text to Hugging Face inference API for summarization, and display the summary.
+## You are an AI coding assistant. Create a small project called `nutrition-label-scanner` that implements an MVP (Phase 1 & 2) using Streamlit (UI), pytesseract (OCR), and the Hugging Face Inference API model `facebook/bart-large-cnn` for summarization. The app must accept an uploaded image (mobile-friendly), run OCR, display extracted text, send that text to Hugging Face inference API for summarization, and display the summary.
 
 Generate these files with exact contents:
 
@@ -16,3 +16,151 @@ Generate these files with exact contents:
 - Use Streamlit spinners and a clean layout: show the uploaded image, OCR result in a scrollable box, then the AI summary below.
 - Cache expensive ops where appropriate (use Streamlit caching).
 - Include basic error handling for network errors and tesseract missing/bad path.
+
+## You are to build/refactor a Streamlit app that lets users upload a food nutrition label image, extracts text via OCR, parses nutrition facts, and generates a consumer-friendly summary using Hugging Face summarization models. Focus only on Phase 1 & 2 (OCR + summarization + simple UI). Implement the following:
+
+1. **Libraries**
+   - Use `streamlit` for UI.
+   - Use `PIL`, `pytesseract`, `opencv-python` for OCR.
+   - Use `requests` for Hugging Face API call.
+   - No database/storage needed.
+
+2. **OCR Enhancements**
+   - Preprocess uploaded image with OpenCV: grayscale, resize, adaptive threshold.
+   - Clean OCR text: remove junk chars, join hyphenated words, collapse lines, normalize spaces.
+   - Show both raw and cleaned OCR text in UI.
+
+3. **Nutrient Parsing**
+   - Implement regex-based parser to detect key nutrients: Energy (kcal/kJ), Fat, Saturated Fat, Carbohydrate, Sugars, Protein, Salt/Sodium, Fiber.
+   - Extract numeric values + units, and optional serving info.
+   - Show parsed nutrient dictionary in UI (`st.json`).
+
+4. **Health Flags**
+   - Compute flags using thresholds (example UK guidelines per 100g):
+     - Sugars high ≥22.5g, moderate ≥5g
+     - Fat high ≥17.5g, moderate ≥3g
+     - Saturates high ≥5g
+     - Salt high ≥1.5g
+   - Output flags like "High in sugar", "Moderate fat", etc.
+
+5. **Summarization Prompting**
+   - Build a structured prompt for Hugging Face summarizer:
+     - Convert parsed nutrients into bullet list.
+     - Add a **few-shot example**: show sample input (nutrients) and ideal output (short plain-language bullets).
+     - Instruct model: "Always mention health flags (sugar, salt, fat) and include one short consumer tip."
+   - Use `facebook/bart-large-cnn` initially, but structure the request for easy model swapping later.
+   - Set `do_sample=False`, `min_length=20`, `max_length=120`.
+
+6. **App Flow**
+   - User uploads image.
+   - Show extracted text (raw + cleaned).
+   - Show parsed nutrient table.
+   - Call Hugging Face summarizer with structured prompt.
+   - Combine Hugging Face summary with computed flags into final output.
+   - Display final AI summary in plain text area.
+
+7. **UI Features**
+   - Sidebar: Hugging Face API key input.
+   - Main: image uploader, OCR output, parsed nutrients, AI summary.
+   - Add “Regenerate Summary” button to retry.
+
+8. **Code Quality**
+   - Organize helpers: `extract_text_from_image`, `clean_ocr_text`, `parse_nutrition_table`, `compute_flags`, `build_structured_prompt`, `summarize_with_hf_prompt`, `structured_summarize`.
+   - Handle API/timeout errors gracefully with `st.error`.
+
+End goal: A beginner-friendly MVP that reliably extracts, parses, and summarizes nutrition labels into simple consumer-friendly bullets, with clear intermediate outputs for debugging.
+
+## Make the following enhancements to the existing Mistral summarization prompt:
+
+At the beginning of every summary, clearly state the serving size in grams.
+
+When showing % Daily Value, explain it in plain, short language (e.g., “this means it gives you 20% of what you need in a whole day”).
+
+Keep the rest of the output structure, tone, and style as before:
+
+Friendly yet cautious
+
+Highlight key points (calories/carbs, sugar/fat, vitamins/minerals, protein)
+
+End with a practical tip
+
+## Cursor Instruction Prompt (Frontend Update):
+
+Make the following incremental changes to the frontend of the Streamlit app:
+
+UI Enhancement:
+
+Apply a gradient background with green → white colors.
+
+Style all buttons with the same gradient (green/white) and rounded corners.
+
+Make the UI more modern and user friendly, inspired by the attached reference.
+
+Remove Unnecessary Sections:
+
+Do not display the following UI elements:
+
+“Raw OCR text section”
+
+“Clear OCR text section”
+
+“Parsed Nutrients”
+
+Redesigned Flow:
+
+Step 1: Welcome Screen
+
+Display a friendly welcome message introducing the app (e.g., “Scan a nutrition label and get a simple, AI-powered health summary”).
+
+Provide an upload button to let users upload a photo of the nutrition label.
+
+After upload, show a confirmation message (e.g., “✅ Your label was uploaded successfully!”).
+
+Step 2: Summary Generation
+
+Display a button labeled “Generate Summary” after upload is confirmed.
+
+When the user clicks, run OCR + LLM and show the AI-generated summary.
+
+Under the summary, display Health Flags (e.g., “⚠️ High sugar”, “✅ Good source of calcium”) extracted from the analysis.
+
+Keep the UI minimal, clean, and structured around these steps.
+
+## You are to enhance the Streamlit frontend UI of the nutrition label summarizer app with style and flow improvements inspired by Healthline’s site and the previously given UI changes. Apply these incremental changes:
+
+1. **Overall Style & Layout (Healthline-inspired):**
+   - Use a **clean, minimal, magazine-like layout**: clear headings, whitespace, content sections separated with subtle lines or card style containers.
+   - Use a soft gradient background (green → white) or light, clean background. Ensure content panels/cards have white backgrounds or light shadows to stand out.
+   - Typography: use readable fonts, headings & subheadings, consistent font sizes. Buttons look modern: rounded corners, color accent (green) for primary actions.
+
+2. **Welcome / Home Screen Flow:**
+   - At app start, show a welcome section with title & subtitle that explains what the app does in short. E.g. “Welcome! Easily scan a nutrition label to get a simple, health-focused summary.”  
+   - Below that, show the upload widget (button or drag-drop) in a prominent card / panel.
+
+3. **Upload -> Confirmation -> Generate Summary:**
+   - After user uploads an image, show a confirmation message / small preview thumbnail with “Upload successful!”  
+   - Then show a single button: **“Generate Summary”** prominently.  
+
+4. **Hide Internal Details:**
+   - Do not display “Raw OCR text”, “Cleaned OCR text”, or “Parsed Nutrients” sections in main UI for ordinary users.
+
+5. **Summary Display:**
+   - Once summary is generated, display it in a well-designed panel/card.  
+   - Also display “Health Flags” clearly (icons or badge-like appearance) near the summary or beneath it.  
+
+6. **Consistency & Feedback:**
+   - Buttons should change color or show state when hovered / clicked (“Generate Summary” disabled until upload, etc.).  
+   - Use spinners or progress indicators while summarization is running.  
+   - Thank you / feedback message after summary (e.g. “Thanks for using the app! Here’s your summary:”).
+
+7. **Navigation / Branding Touches:**
+   - Add a header or top bar with app name or logo (if available).  
+   - Footer with minimal credits or links (e.g., “Powered by OCR + AI”).  
+
+8. **Code organization:**
+   - Put UI sections in functions: welcome_screen(), upload_section(), summary_section().  
+   - Use `st.beta_container()` or `st.container()` / `st.columns()` to layout nicely.
+
+End goal: The user flow feels polished, health-content-style, with clarity and minimal distractions; the UI mimics Healthline’s clarity and readability while keeping your app’s core functionality front and center.
+
+## Remove option to enter Misral key on frontend and add to the environment variables at backend
