@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: ocr-streamlit-app
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run app.py
+    build:
+      buildCommand: |
+        apt-get update && apt-get install -y tesseract-ocr
+        pip install -r requirements.txt
